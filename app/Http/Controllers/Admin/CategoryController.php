@@ -13,8 +13,11 @@ class CategoryController extends Controller
      */
     public function index()
     {   
-        //llamar vista index de categories
-        return view('categories.index');
+        //obtener todas las categorias
+        $categories = Category::all();
+        
+        //llamar vista index de categories, enviando las categorias
+        return view('admin.categories.index', compact('categories'));
     }
 
     /**

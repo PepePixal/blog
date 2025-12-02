@@ -8,4 +8,5 @@ Route::get('/', function (){
     return view('admin.dashboard');
 })->name('dashboard');
 
+// Genera las 7 rutas necesarias para CRUD de categorias, asignadas al controlador CategoryController
 Route::resource('categories', CategoryController::class);

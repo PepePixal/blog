@@ -34,8 +34,8 @@
                     <flux:navlist.item icon="squares-2x2" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
                         {{ __('DASHBOARD') }}
                     </flux:navlist.item>
-                    <flux:navlist.item icon="squares-2x2" :href="route('admin.categories.index')" :current="request()->routeIs('admin.categories.*')" wire:navigate>
-                        {{ __('Categorias') }}
+                    <flux:navlist.item icon="list-bullet" :href="route('admin.categories.index')" :current="request()->routeIs('admin.categories.*')" wire:navigate>
+                        {{ __('Categorías') }}
                     </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
