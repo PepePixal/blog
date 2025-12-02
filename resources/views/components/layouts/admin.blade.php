@@ -147,5 +147,17 @@
         </flux:main>
 
         @fluxScripts
+
+        {{-- si existe la variable de sesión flash 'swal', mostrará la alerta sweetalert2 --}}
+        @if (session()->has('swal'))
+            <script>
+                Swal.fire({
+                    icon: '{{ session('swal')['icon'] }}',
+                    title: '{{ session('swal')['title'] }}',
+                    text: '{{ session('swal')['text'] }}',
+                });
+            </script>
+        @endif
+
     </body>
 </html>

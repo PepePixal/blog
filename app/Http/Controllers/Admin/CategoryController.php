@@ -15,7 +15,7 @@ class CategoryController extends Controller
     {   
         //obtener todas las categorias ordenadas por id ascendente
         $categories = Category::orderBy('id', 'desc')->get();
-        
+
         //llamar vista index de categories, enviando las categorias
         return view('admin.categories.index', compact('categories'));
     }
@@ -40,8 +40,19 @@ class CategoryController extends Controller
 
         // crear la categoria con los datos validados
         Category::create($data);
-    }
 
+        //variable de sesion flash 'swal' de un solo uso, que servirá para mostrar la alerta sweetalert2,
+        //con icono, titulo y texto, cuando se recrgue la vista index de categories
+        session()->flash('swal',[
+            'icon' => 'success',
+            'title' => '¡Categoría creada!',
+            'text' => 'La Categoría se ha creado correctamente',
+        ]);
+
+        //redirigir a la vista index de categories
+        return redirect()->route('admin.categories.index');
+    }
+    
     /**
      * Display the specified resource.
      */
