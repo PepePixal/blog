@@ -1,9 +1,16 @@
 <x-layouts.admin >
-    <!-- Breadcrumb o mígas de pan -->
-    <flux:breadcrumbs class="mb-6">
-        <flux:breadcrumbs.item href="{{ route('admin.dashboard') }}">Dashboard</flux:breadcrumbs.item>
-        <flux:breadcrumbs.item>Categorías</flux:breadcrumbs.item>
-    </flux:breadcrumbs>
+    <div class="flex justify-between items-center mb-4">
+        <!-- Breadcrumb o mígas de pan -->
+        <flux:breadcrumbs>
+            <flux:breadcrumbs.item href="{{ route('admin.dashboard') }}">Dashboard</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{ route('admin.categories.index') }}">Categorías</flux:breadcrumbs.item>
+        </flux:breadcrumbs>
+
+        <!-- Botón para crear una nueva categoría -->
+        <a href="{{ route('admin.categories.create') }}" class="btn btn-blue text-sm">
+            Nueva Categoría
+        </a>
+    </div>
 
     <!-- listado de Categorías -->
     <!-- Tabla html con Tailwind CSS de: https://flowbite.com/docs/components/tables/ -->

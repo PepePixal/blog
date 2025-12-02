@@ -13,8 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {   
-        //obtener todas las categorias
-        $categories = Category::all();
+        //obtener todas las categorias ordenadas por id ascendente
+        $categories = Category::orderBy('id', 'desc')->get();
         
         //llamar vista index de categories, enviando las categorias
         return view('admin.categories.index', compact('categories'));
@@ -25,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
@@ -33,7 +33,13 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validar los datos y almacenarlos en la variable $data
+        $data = $request->validate([
+            'name'=> 'required|string|max:255|unique:categories',
+        ]);
+
+        // crear la categoria con los datos validados
+        Category::create($data);
     }
 
     /**
