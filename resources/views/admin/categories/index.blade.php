@@ -24,7 +24,7 @@
                     <th scope="col" class="px-6 py-3 font-medium">
                         Nombre
                     </th>
-                    <th scope="col" class="px-6 py-3 font-medium">
+                    <th scope="col" class="px-6 py-3 font-medium" width="100">
                         Editar
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium">
@@ -47,9 +47,15 @@
                             </a>
                         </td>
                         <td class="px-6 py-4">
-                            <a href="{{ route('admin.categories.destroy', $category->id) }}" class="btn btn-red">
-                                Eliminar
-                            </a>
+                            <form class="delete-form" action="{{ route('admin.categories.destroy', $category) }}" method="POST">
+                                @csrf
+
+                                {{-- Como el método de la ruta destroy, donde se envía el id de la categoría es tipo DELETE,
+                                   debemos agregar el método DELETE --}}
+                                @method('DELETE')
+
+                                <button type="submit" class="btn btn-red">Eliminar</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach        
@@ -57,5 +63,37 @@
         </table>
     </div>
 
+    @push('js')
+        {{-- Script para eliminar una categoría --}}
+        <script>
+            // seleccionar todos los formularios con la clase delete-form
+            document.querySelectorAll('.delete-form').forEach(form => {
+                // por cada formulario, agrega un escuchador del evento submit
+                form.addEventListener('submit', function (event) {
+
+                    // prevenir el envío del formulario
+                    event.preventDefault();
+
+                    // alerta fire de SweetAlert2
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: "No podrás revertir esto!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, eliminarlo!'
+                    }).then((result) => {
+                        // si el usuario confirma la eliminación
+                        if (result.isConfirmed) {
+                            // enviar el formulario para eliminar la categoría
+                            form.submit();
+                        }
+                    });
+
+                });
+            });
+        </script>
+    @endpush
 
 </x-layouts.admin>

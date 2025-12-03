@@ -159,5 +159,8 @@
             </script>
         @endif
 
+        {{-- scripts adicionales --}}
+        @stack('js')
+
     </body>
 </html>

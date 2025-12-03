@@ -101,6 +101,18 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        // eliminar el registro de la categoría
+        $category->delete();
+
+        //variable de sesion flash 'swal' de un solo uso, que servirá para mostrar la alerta sweetalert2,
+        //con icono, titulo y texto, cuando se recrgue la vista index de categories
+        session()->flash('swal',[
+            'icon' => 'success',
+            'title' => '¡Categoría ELIMINADA!',
+            'text' => 'Categoría ' . $category->name . ' eliminada correctamente',
+        ]);
+
+        //redirigir a la ruta index de categories
+        return redirect()->route('admin.categories.index');
     }
 }
