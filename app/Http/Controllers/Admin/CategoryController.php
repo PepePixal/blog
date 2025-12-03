@@ -66,7 +66,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        //llamar vista edit de categories, enviando la categoria
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -74,7 +75,25 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        //validar los datos. En unique, se excluye el id de la categoria actual editada,
+        //para permitir que el nombre de esta se pueda reescribir.
+        $data = $request->validate([
+            'name'=> 'required|string|max:255|unique:categories,name,' . $category->id,
+        ]);
+
+        //actualizar la categoria con los datos validados $data
+        $category->update($data);
+
+        //variable de sesion flash 'swal' de un solo uso, que servirá para mostrar la alerta sweetalert2,
+        //con icono, titulo y texto, cuando se recrgue la vista index de categories
+        session()->flash('swal',[
+            'icon' => 'success',
+            'title' => '¡Categoría actualizada!',
+            'text' => 'La Categoría se ha actualizado correctamente',
+        ]);
+
+        //redirigir a la ruta index de categories
+        return redirect()->route('admin.categories.index');
     }
 
     /**

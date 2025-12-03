@@ -13,7 +13,7 @@
         @csrf
         
         <!-- con el value="{{ old('name') }}" se mantiene el valor del campo si hay un error en la validación -->
-        <flux:input label="Username" name="name" type="text" value="{{ old('name') }}"/>
+        <flux:input label="Nombre" name="name" type="text" value="{{ old('name') }}"/>
 
         <div class="flex justify-end">
             <flux:button type="submit" variant="primary">Guardar</flux:button>

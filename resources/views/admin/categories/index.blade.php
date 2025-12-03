@@ -42,10 +42,14 @@
                             {{ $category->name }}
                         </td>
                         <td class="px-6 py-4">
-                            Editar
+                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-green">
+                                Editar
+                            </a>
                         </td>
                         <td class="px-6 py-4">
-                            Eliminar
+                            <a href="{{ route('admin.categories.destroy', $category->id) }}" class="btn btn-red">
+                                Eliminar
+                            </a>
                         </td>
                     </tr>
                 @endforeach        

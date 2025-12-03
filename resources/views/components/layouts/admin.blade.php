@@ -148,7 +148,7 @@
 
         @fluxScripts
 
-        {{-- si existe la variable de sesión flash 'swal', mostrará la alerta sweetalert2 --}}
+        {{-- si existe la variable de sesión flash 'swal', mostrará esta alerta sweetalert2 --}}
         @if (session()->has('swal'))
             <script>
                 Swal.fire({
