@@ -3,16 +3,16 @@
         <!-- Breadcrumb o mígas de pan -->
         <flux:breadcrumbs>
             <flux:breadcrumbs.item href="{{ route('admin.dashboard') }}">Dashboard</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="{{ route('admin.categories.index') }}">Categorías</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item>Posts</flux:breadcrumbs.item>
         </flux:breadcrumbs>
 
         <!-- Botón para crear una nueva categoría -->
-        <a href="{{ route('admin.categories.create') }}" class="btn btn-blue text-sm">
-            Nueva Categoría
+        <a href="{{ route('admin.posts.create') }}" class="btn btn-blue text-sm">
+            Nuevo Post
         </a>
     </div>
 
-    <!-- listado de Categorías -->
+    <!-- listado de Posts -->
     <!-- Tabla html con Tailwind CSS de: https://flowbite.com/docs/components/tables/ -->
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base ">
         <table class="w-full text-sm text-left rtl:text-right text-body">
@@ -22,7 +22,10 @@
                         ID
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium">
-                        Nombre
+                        TÍTULO
+                    </th>
+                    <th scope="col" class="px-6 py-3 font-medium">
+                        PUBLICADO
                     </th>
                     <th scope="col" class="px-6 py-3 font-medium" width="100">
                         Editar
@@ -33,22 +36,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($categories as $category)
+                @foreach ($posts as $post)
                     <tr class="bg-neutral-primary border-b border-default">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                            {{ $category->id }}
+                            {{ $post->id }}
                         </th>
                         <td class="px-6 py-4">
-                            {{ $category->name }}
+                            {{ $post->title }}
                         </td>
                         <td class="px-6 py-4">
-                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-green">
+                            {{ $post->is_published ? 'Sí' : 'No' }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ route('admin.posts.edit', $post) }}" class="btn btn-green">
                                 Editar
                             </a>
                         </td>
                         <td class="px-6 py-4">
-                            <form class="delete-form" action="{{ route('admin.categories.destroy', $category) }}"
-                                method="POST">
+                            <form class="delete-form" action="{{ route('admin.posts.destroy', $post) }}" method="POST">
                                 @csrf
 
                                 {{-- Como el método de la ruta destroy, donde se envía el id de la categoría es tipo DELETE,
@@ -63,6 +68,11 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    {{-- links de paginación, obtenidos de la variable $posts que viene de la ruta admin.posts.index --}}   
+    <div class="mt-4">
+        {{ $posts->links() }}
     </div>
 
     {{-- Este script se renderiza en la vista admin.blade.php --}}
@@ -100,4 +110,4 @@
         </script>
     @endpush
 
-</x-layouts.admin>
+</x-layouts.admin>  

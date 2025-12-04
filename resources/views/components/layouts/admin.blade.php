@@ -40,6 +40,9 @@
                     <flux:navlist.item icon="list-bullet" :href="route('admin.categories.index')" :current="request()->routeIs('admin.categories.*')" wire:navigate>
                         {{ __('Categorías') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="book-open" :href="route('admin.posts.index')" :current="request()->routeIs('admin.posts.*')" wire:navigate>
+                        {{ __('Posts') }}
+                    </flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 

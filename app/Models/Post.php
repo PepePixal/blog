@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+    //agrega el trait HasFactory, para poder usar el factory PostFactory
+    //requiere agregar la importacion de HasFactory 
+    use HasFactory;
+
     //asignacion masiva
     protected $fillable = [
         'title',

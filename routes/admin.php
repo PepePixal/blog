@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function (){
@@ -8,5 +9,8 @@ Route::get('/', function (){
     return view('admin.dashboard');
 })->name('dashboard');
 
-// Genera las 7 rutas necesarias para CRUD de categorias, asignadas al controlador CategoryController
+// Crea las 7 rutas necesarias para CRUD de categorias, asignadas al controlador CategoryController
 Route::resource('categories', CategoryController::class);
+
+// Crea las 7 rutas necesarias para CRUD de posts, asignadas al controlador PostController
+Route::resource('posts', PostController::class);

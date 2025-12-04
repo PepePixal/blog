@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Post;
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -26,7 +27,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        //crear 10 categorias
+        //crear 10 categorias aleatorias falsas de prueba
         Category::factory(10)->create();
+
+        //crear 100 posts aleatorios falsos de prueba
+        Post::factory(100)->create();
     }
 }
