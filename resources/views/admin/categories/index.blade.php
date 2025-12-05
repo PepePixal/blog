@@ -65,13 +65,15 @@
         </table>
     </div>
 
-    {{-- Este script se renderiza en la vista admin.blade.php --}}
+    {{-- con @push('js') se renderiza el script en la vista admin.blade.php --}}
     @push('js')
-        {{-- Script para eliminar una categoría --}}
+
+        {{-- Script con alerta SweetAlert2 para confirmar la eliminación de la categoría --}}
         <script>
-            // seleccionar todos los formularios con la clase delete-form
+            // seleccionar todos los formularios con la clase delete-form y para cada formulario
             document.querySelectorAll('.delete-form').forEach(form => {
-                // por cada formulario, agrega un escuchador del evento submit
+
+                // agrega un escuchador del evento submit
                 form.addEventListener('submit', function (event) {
 
                     // prevenir el envío del formulario
@@ -88,6 +90,7 @@
                         confirmButtonText: 'Sí, eliminar',
                         cancelButtonText: 'Cancelar',
                     }).then((result) => {
+
                         // si el usuario confirma la eliminación
                         if (result.isConfirmed) {
                             // enviar el formulario para eliminar la categoría

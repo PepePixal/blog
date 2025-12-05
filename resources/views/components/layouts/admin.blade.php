@@ -21,6 +21,8 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        
+        {{-- para que funcione el script de flux --}}
         @fluxAppearance
     </head>
 
@@ -149,6 +151,7 @@
             {{ $slot }}
         </flux:main>
 
+        {{-- para que funcione el script de flux --}}
         @fluxScripts
 
         {{-- si existe la variable de sesión flash 'swal', mostrará esta alerta sweetalert2 --}}

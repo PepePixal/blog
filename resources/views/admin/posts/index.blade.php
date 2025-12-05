@@ -75,9 +75,10 @@
         {{ $posts->links() }}
     </div>
 
-    {{-- Este script se renderiza en la vista admin.blade.php --}}
+    {{-- con @push('js') se renderiza el script en la vista admin.blade.php --}}
     @push('js')
-        {{-- Script para eliminar una categoría --}}
+
+        {{-- Script con alerta SweetAlert2 para confirmar la eliminación del post --}}
         <script>
             // seleccionar todos los formularios con la clase delete-form
             document.querySelectorAll('.delete-form').forEach(form => {
