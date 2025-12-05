@@ -19,9 +19,11 @@
         <!-- el id="slug" es necesario para que la función string_to_slug pueda acceder al input con name="slug" -->
         <flux:input label="Slug" name="slug" id="slug" type="text" value="{{ old('slug') }}"/>
 
-        <flux:select label="Categoría" name="category_id" wire:model="industry" placeholder="Selecciona una categoría">
+        <flux:select label="Categoría" name="category_id" placeholder="Selecciona una categoría">
             @foreach ($categories as $category)
-                <flux:select.option value="{{ $category->id }}">{{ $category->name }}</flux:select.option>
+                <flux:select.option value="{{ $category->id }}" :selected="$category->id == old('category_id')">
+                    {{ $category->name }}
+                </flux:select.option>
             @endforeach
         </flux:select>
 

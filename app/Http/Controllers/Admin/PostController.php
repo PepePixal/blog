@@ -14,8 +14,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        // obtener todos los posts paginados, de 15 por defecto
-        $posts = Post::paginate();
+        // obtener todos los posts, ordenados por id (descendente) y paginarlos
+        $posts = Post::latest("id")->paginate(10);
 
         // retornar la vista admin.posts.index con los posts
         return view('admin.posts.index', compact('posts')); 
@@ -26,9 +26,10 @@ class PostController extends Controller
      */
     public function create()
     {
-        // obtener todas las categorías
+        //obtener todas las categorías para el select del formulario crear post
         $categories = Category::all(); 
 
+        // retornar la vista admin.posts.create, enviando las categorías
         return view('admin.posts.create', compact('categories'));
     }
 
@@ -58,7 +59,8 @@ class PostController extends Controller
             'text' => $post->title,
         ]);
 
-        //redirigir a la ruta admin.posts.edit con el id del post
+        //redirigir a la ruta admin.posts.edit, enviando el post,
+        //para que se muestre el formulario de edición y agregar los campos del nuevo post
         return redirect()->route('admin.posts.edit', $post);
     }
 
@@ -75,7 +77,11 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-       return view("admin.posts.edit", compact("post"));
+        //obtener todas las categorías para el select del formulario editar post
+        $categories = Category::all();
+
+        //retornar la vista admin.posts.edit, enviando el post y las categorías
+        return view("admin.posts.edit", compact("post", "categories"));
     }
 
     /**
@@ -83,7 +89,29 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        // validar los datos del formulario antes de actualizar el post y almacenarlos
+        $data = $request->validate([
+            'title' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
+            'category_id' => 'required|exists:categories,id',
+            'excerpt' => 'required_if:is_published,1|string',
+            'content' => 'required_if:is_published,1|string',
+            'is_published' => 'boolean'
+        ]);
+
+        // actualizar el post con los datos del formulario
+        $post->update($data);
+
+        // crear una variable de sesión para mostrar un mensaje de éxito
+        session()->flash('swal', [
+            'icon' => 'success',
+            'title' => 'Post actualizado correctamente',
+            'text' => $post->title,
+        ]);
+
+        // redirigir a la ruta admin.posts.edit, enviando el post,
+        // para que se muestre el formulario de edición y agregar los campos del nuevo post
+        return redirect()->route('admin.posts.edit', $post);
     }
 
     /**
