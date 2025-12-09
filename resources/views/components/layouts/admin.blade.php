@@ -154,7 +154,8 @@
         {{-- para que funcione el script de flux --}}
         @fluxScripts
 
-        {{-- si existe la variable de sesión flash 'swal', mostrará esta alerta sweetalert2 --}}
+        {{-- si existe la variable de sesión flash 'swal', mostrará esta alerta sweetalert2,
+        con los datos recibidos de la variable de sesión flash 'swal' --}}
         @if (session()->has('swal'))
             <script>
                 Swal.fire({
@@ -165,7 +166,7 @@
             </script>
         @endif
 
-        {{-- scripts adicionales --}}
+        {{-- pila de scripts adicionales creada con @push('js') --}}
         @stack('js')
 
     </body>

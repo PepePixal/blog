@@ -88,24 +88,25 @@ class PostController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, Post $post)
-    {
+    {   
         // validar los datos del formulario antes de actualizar el post y almacenarlos
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
             'category_id' => 'required|exists:categories,id',
-            'excerpt' => 'required_if:is_published,1|string',
-            'content' => 'required_if:is_published,1|string',
-            'is_published' => 'boolean'
+            'is_published' => 'nullable|integer|in:0,1',
+            // validación de que el campo excerpt sea requerido si el post está publicado
+            'excerpt' => 'required_if:is_published,1|string|nullable',
+            'content' => 'required_if:is_published,1|string|nullable'
         ]);
 
-        // actualizar el post con los datos del formulario
+        // actualizar el post editado con los datos del formulario
         $post->update($data);
 
-        // crear una variable de sesión para mostrar un mensaje de éxito
+        // crear una variable temporal de sesión para mostrar un mensaje de éxito
         session()->flash('swal', [
             'icon' => 'success',
-            'title' => 'Post actualizado correctamente',
+            'title' => 'Actualizado el post:',
             'text' => $post->title,
         ]);
 

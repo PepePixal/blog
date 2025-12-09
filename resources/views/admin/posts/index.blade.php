@@ -75,7 +75,7 @@
         {{ $posts->links() }}
     </div>
 
-    {{-- con @push('js') se renderiza el script en la vista admin.blade.php --}}
+    {{-- con @push('js') el script se renderiza en la vista admin.blade.php con @stack('js') --}}
     @push('js')
 
         {{-- Script con alerta SweetAlert2 para confirmar la eliminación del post --}}
