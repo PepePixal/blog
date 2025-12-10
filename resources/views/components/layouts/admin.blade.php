@@ -20,6 +20,9 @@
         <!-- SweetAlert2 CDN-->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+        {{-- pila de scripts adicionales, creados en otros archivos, con @push('css') --}}
+        @stack('css')
+
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         
         {{-- para que funcione el script de flux --}}
@@ -166,7 +169,7 @@
             </script>
         @endif
 
-        {{-- pila de scripts adicionales creada con @push('js') --}}
+        {{-- pila de scripts adicionales, creada en otros archivos, con @push('js') --}}
         @stack('js')
 
     </body>
