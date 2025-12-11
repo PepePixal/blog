@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -77,11 +78,14 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+
         //obtener todas las categorías para el select del formulario editar post
         $categories = Category::all();
+        //obtener todas las etiquetas para el select2 del formulario editar post
+        $tags = Tag::all();
 
-        //retornar la vista admin.posts.edit, enviando el post y las categorías
-        return view("admin.posts.edit", compact("post", "categories"));
+        //retornar la vista admin.posts.edit, enviando el post, categorías y etiquetas
+        return view("admin.posts.edit", compact("post", "categories", "tags"));
     }
 
     /**
@@ -94,14 +98,27 @@ class PostController extends Controller
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
             'category_id' => 'required|exists:categories,id',
+            'tags' => 'array',
             'is_published' => 'nullable|integer|in:0,1',
             // validación de que el campo excerpt sea requerido si el post está publicado
             'excerpt' => 'required_if:is_published,1|string|nullable',
             'content' => 'required_if:is_published,1|string|nullable'
         ]);
 
+        
         // actualizar el post editado con los datos del formulario
         $post->update($data);
+     
+        //** para agregar a la tabla tags, las nuevas etiquetas generadas en el select tags y enviadas con el formulario */
+        //define un array vacío, para almacenar las etiquetas
+        $tags = [];
+        // si $request->tags contiene NULL, sustituirlo por un array vacío
+        foreach ($request->tags ?? [] as $tag){
+            $tags[] = Tag::firstOrCreate(['name' => $tag]);
+        }
+
+        // sincronizar las etiquetas con el post, a través de la tabla pivot post_tag
+        $post->tags()->sync($tags);
 
         // crear una variable temporal de sesión para mostrar un mensaje de éxito
         session()->flash('swal', [

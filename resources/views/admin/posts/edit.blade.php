@@ -4,6 +4,9 @@
     @push('css')
         {{-- css  para el editor de texto enriquecido de Quill --}}
         <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet"/>
+
+        {{-- css para select2 para el select de etiquetas --}}
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @endpush
     
     <div class="mb-4">
@@ -53,6 +56,20 @@
 
             <flux:textarea label="Resumen" name="excerpt" rows="3">{{ old('excerpt', $post->excerpt) }}</flux:textarea>
 
+            {{-- selector etiquetas. Plugin Select2 --}}
+            <div>
+                <p class="font-medium text-sm mb-1">Etiquetas</p>
+                <select id="tags" name="tags[]" multiple="multiple" style="width: 100%">
+                    {{-- generar las options iterando las etiquetas de la BD --}}
+                    @foreach ($tags as $tag)
+                        <option value="{{ $tag->name }}" @selected(in_array($tag->name, old('tags', $post->tags->pluck('name')->toArray())))>
+                            {{ $tag->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- texarea con editor normal, para contenido --}}
             {{-- <flux:textarea label="Contenido" name="content" rows="10">{{ old('content', $post->content) }}</flux:textarea> --}}
 
             {{-- editor de texto enriquecido de Quill, que NO podemos enviar con el formulario --}}
@@ -65,9 +82,8 @@
                 </div>
             </div>
             {{-- textarea oculto que se sincroniza con el contenido del editor enriquecido, que se envía con el formulario --}}
-            <flux:textarea class="hidden" name="content" id="content" >{{ old('content', $post->content) }}</flux:textarea>
-
-            
+            <textarea class="hidden" name="content" id="content" >{{ old('content', $post->content) }}</textarea>
+ 
             {{-- inpts radio is_published --}}
             <div class="mb-4">
                 <p class="text-sm font-semibold">Estado</p>
@@ -110,6 +126,21 @@
 
         </script>
 
+        {{-- cdn js de jQuery para el plugin select2 --}} 
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+        {{-- cdn js para plugin select2, para las etiquetas en el formulario de edición --}}
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        {{-- js script del plugin selected2 --}}
+        <script>
+            $(document).ready(function() {
+                $('#tags').select2({
+                    tags: true,
+                    tokenSeparators: [',']
+                });
+            });
+        </script>
    
     @endpush    
 
