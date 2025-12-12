@@ -38,12 +38,12 @@
             </a>
 
             <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
+                <flux:navlist.group :heading="__('Administrador')" class="grid">
                     <flux:navlist.item icon="squares-2x2" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>
-                        {{ __('DASHBOARD') }}
+                        {{ __('Dashboard') }}
                     </flux:navlist.item>
                     <flux:navlist.item icon="list-bullet" :href="route('admin.categories.index')" :current="request()->routeIs('admin.categories.*')" wire:navigate>
-                        {{ __('Categorías') }}
+                        {{ __('Categories') }}
                     </flux:navlist.item>
                     <flux:navlist.item icon="book-open" :href="route('admin.posts.index')" :current="request()->routeIs('admin.posts.*')" wire:navigate>
                         {{ __('Posts') }}
