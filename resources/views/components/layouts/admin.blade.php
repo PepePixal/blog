@@ -157,6 +157,22 @@
         {{-- para que funcione el script de flux --}}
         @fluxScripts
 
+        {{-- mostrar alerta con los errores de validación, si existen en la var global $errors --}}
+        @if ($errors->any())
+            <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    // html: permite mostrar html en el mensaje de alerta. Comillas invertidas para crear varias lineas
+                    html: `<ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>`
+                });
+            </script>
+        @endif
+
         {{-- si existe la variable de sesión flash 'swal', mostrará esta alerta sweetalert2,
         con los datos recibidos de la variable de sesión flash 'swal' --}}
         @if (session()->has('swal'))
