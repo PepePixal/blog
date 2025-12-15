@@ -18,26 +18,32 @@
         </flux:breadcrumbs>
     </div>
 
-    {{-- imagen previa del post --}}
-    <div class="relative mb-4 mr-20 ml-20">
-        <img id="imgPreview" class="w-full aspect-video object-contain object-center" src="/no-image.png" alt="no-image">
-        {{-- botón cambiar imagen --}}
-        <div class="absolute top-8 right-8">
-            <label class="bg-gray-200 px-4 py-2 rounded-lg cursor-pointer border border-gray-300">
-                Cambiar imagen
-                <input type="file" class="hidden" name="image" accept="image/*" onchange="preview_image(event, '#imgPreview')">
-            </label>
-        </div>
-    </div>
+
 
     {{-- formulario de edición de post --}}
     <div class="bg-white rounded-lg shadow-lg px-6 py-8">
-        <form action="{{ route('admin.posts.update', $post) }}" method="POST" class="space-y-4">
+        <form action="{{ route('admin.posts.update', $post) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
             <!-- genera un campo oculto (input) con un token de seguridad único. -->
             @csrf
 
             {{-- Indica que el formulario es un PUT, requerido por el método update del controlador --}}
             @method('PUT')
+
+            {{-- previsualizar la imagen asociada al post --}}
+            <div class="relative mb-4 mr-20 ml-20">
+                <img id="imgPreview" class="w-full aspect-video object-contain object-center" 
+                    {{-- si existe la imagen, obtiene su url y la muestra, si no, muestra la imagen por defecto --}}
+                    src="{{ $post->image_path ? Storage::url($post->image_path) : '/storage/no-image.jpg'}}" alt="no-image"
+                >
+   
+                {{-- botón cambiar imagen en la previsualización --}}
+                <div class="absolute top-8 right-8">
+                    <label class="bg-gray-200 px-4 py-2 rounded-lg cursor-pointer border border-gray-300">
+                        Cambiar imagen
+                        <input type="file" class="hidden" name="image" accept="image/*" onchange="preview_image(event, '#imgPreview')">
+                    </label>
+                </div>
+            </div>
 
             <!-- con el value= old(), se mantiene el valor del campo si hay un error en la validación,
                 pero si no hay error, se asigna el valor de $post->title recibido en la vista edit.blade.php -->

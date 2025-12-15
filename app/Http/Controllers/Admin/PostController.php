@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -95,6 +96,7 @@ class PostController extends Controller
     {   
         // validar los datos del formulario antes de actualizar el post y almacenarlos
         $data = $request->validate([
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
             'category_id' => 'required|exists:categories,id',
@@ -102,9 +104,22 @@ class PostController extends Controller
             'is_published' => 'nullable|integer|in:0,1',
             // validación de que el campo excerpt sea requerido si el post está publicado
             'excerpt' => 'required_if:is_published,1|string|nullable',
-            'content' => 'required_if:is_published,1|string|nullable'
+            'content' => 'required_if:is_published,1|string|nullable',
         ]);
 
+        // validar si en el campo image se envió un archivo
+        if ($request->hasFile('image')) {
+
+            // validar si en el campo image_path tiene un path, para saber si existe una imagen previa,
+            // si existe, la elimina, antes de subir una nueva imagen
+            if ($post->image_path) {
+                Storage::delete($post->image_path);
+            }   
+
+            // guardar el archivo en el disco local, con el facade Storage y el método putFile(), en una subcarpeta 'posts' y
+            // almacenar en $data, el path que nos retorna Storage, como valor del campo image_path
+            $data['image_path'] = Storage::put('posts', $request->image);
+        }
         
         // actualizar el post editado con los datos del formulario
         $post->update($data);
@@ -137,6 +152,6 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        return "fomulario eliminado";
     }
 }
