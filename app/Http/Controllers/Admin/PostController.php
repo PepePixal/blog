@@ -110,15 +110,28 @@ class PostController extends Controller
         // validar si en el campo image se envió un archivo
         if ($request->hasFile('image')) {
 
-            // validar si en el campo image_path tiene un path, para saber si existe una imagen previa,
-            // si existe, la elimina, antes de subir una nueva imagen
+            // validar si en el campo image_path contiene un path, si existe,
+            // borra el archivo previo según el path, antes de subir un nuevo archivo de imagen
             if ($post->image_path) {
                 Storage::delete($post->image_path);
             }   
 
-            // guardar el archivo en el disco local, con el facade Storage y el método putFile(), en una subcarpeta 'posts' y
+            //** generar un nombre a partir del slug del post y la extensión del archivo, para cambiarselo a al archivo subido */
+            //obtener la extensión del archivo
+            $extension = $request->image->extension();
+            // generar un nombre para el archivo, con el slug del post y la extensión obtenida en $extension
+            $fileName = $post->slug . '.' . $extension;
+
+            //validar y mientras exista en la carpeta 'posts' el archivo con el nombre del slug del post
+            while(Storage::exists('posts/' . $fileName)) {
+                // si existe, modifircar el nombre del archivo, sustituyendo la extensión por -copia.extensión
+                $fileName = str_replace('.' . $extension, '-copia.' . $extension, $fileName);
+            }
+
+
+            // guardar en una subcarpeta 'posts' el archivo que vienen en $request->image, con el nombre del slug del post, en $filename
             // almacenar en $data, el path que nos retorna Storage, como valor del campo image_path
-            $data['image_path'] = Storage::put('posts', $request->image);
+            $data['image_path'] = Storage::putFileAs('posts', $request->image, $fileName);
         }
         
         // actualizar el post editado con los datos del formulario
