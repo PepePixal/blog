@@ -8,6 +8,8 @@ use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Jobs\ResizeImage;
+
 
 class PostController extends Controller
 {
@@ -79,7 +81,6 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-
         //obtener todas las categorías para el select del formulario editar post
         $categories = Category::all();
         //obtener todas las etiquetas para el select2 del formulario editar post
@@ -96,7 +97,7 @@ class PostController extends Controller
     {   
         // validar los datos del formulario antes de actualizar el post y almacenarlos
         $data = $request->validate([
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:5000',
             'title' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:posts,slug,' . $post->id,
             'category_id' => 'required|exists:categories,id',
@@ -110,28 +111,32 @@ class PostController extends Controller
         // validar si en el campo image se envió un archivo
         if ($request->hasFile('image')) {
 
-            // validar si en el campo image_path contiene un path, si existe,
-            // borra el archivo previo según el path, antes de subir un nuevo archivo de imagen
+            // validar si en el campo image_path contiene un path,
+            // borra el archivo existente con nombre = al path, antes de subir un nuevo archivo de imagen
             if ($post->image_path) {
                 Storage::delete($post->image_path);
             }   
 
-            //** generar un nombre a partir del slug del post y la extensión del archivo, para cambiarselo a al archivo subido */
-            //obtener la extensión del archivo
+            //** generar un nombre a partir del slug del post y la extensión del archivo, para cambiarselo al archivo a subir */
+            // Obtener la extensión del archivo
             $extension = $request->image->extension();
-            // generar un nombre para el archivo, con el slug del post y la extensión obtenida en $extension
+            // Generar un nombre para el archivo, con el slug del post y la extensión obtenida en $extension
             $fileName = $post->slug . '.' . $extension;
 
-            //validar y mientras exista en la carpeta 'posts' el archivo con el nombre del slug del post
+            // Mientras exista en la carpeta 'posts' el archivo con el nombre del slug del post,
             while(Storage::exists('posts/' . $fileName)) {
-                // si existe, modifircar el nombre del archivo, sustituyendo la extensión por -copia.extensión
+                // reasignar el nombre del archivo, sustituyendo la .extensión por -copia.extensión
                 $fileName = str_replace('.' . $extension, '-copia.' . $extension, $fileName);
             }
 
-
-            // guardar en una subcarpeta 'posts' el archivo que vienen en $request->image, con el nombre del slug del post, en $filename
-            // almacenar en $data, el path que nos retorna Storage, como valor del campo image_path
+            // guardar en una subcarpeta 'posts', el archivo que vienen en $request->image, con el nombre del slug del post en $fileName
+            // agrega la llave image_path a $data, con el valor que nos retorna Storage, que es el path del archivo guardado en la carpeta 'posts'
             $data['image_path'] = Storage::putFileAs('posts', $request->image, $fileName);
+
+            //llamar al job ResizeImage, enviando el path, para que el trabajo sea encolado.
+            //En desarrollo local, configura la variable de entorno QUEUE_CONNECTION con el driver sync,
+            //para que el trabajo se ejecute de forma síncrona y no sea encolado.
+            ResizeImage::dispatch($data['image_path']);
         }
         
         // actualizar el post editado con los datos del formulario

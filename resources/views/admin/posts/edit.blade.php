@@ -19,7 +19,6 @@
     </div>
 
 
-
     {{-- formulario de edición de post --}}
     <div class="bg-white rounded-lg shadow-lg px-6 py-8">
         <form action="{{ route('admin.posts.update', $post) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -42,6 +41,13 @@
                         Cambiar imagen
                         <input type="file" class="hidden" name="image" accept="image/*" onchange="preview_image(event, '#imgPreview')">
                     </label>
+
+                    {{-- enlace descargar imagen --}}
+                    <div class="bg-gray-200 px-4 py-2 rounded-lg cursor-pointer border border-gray-300 mt-10">
+                        <a href="{{route('prueba', $post)}}">
+                            Descargar imagen
+                        </a>
+                    </div>
                 </div>
             </div>
 

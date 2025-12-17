@@ -3,10 +3,17 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Post;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// ruta temporal para probar la descarga de la imagen
+Route::get('/prueba/{post}', function (Post $post) {
+    return Storage::download($post->image_path);
+})->name('prueba');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
