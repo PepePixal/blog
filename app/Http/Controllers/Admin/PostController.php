@@ -170,6 +170,26 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        return "fomulario eliminado";
+        // valida si el post a eliminar tiene una imagen guardada en la carpeta 'posts'
+        if ($post->image_path) {
+            // borra el archivo existente con nombre = al path, antes de eliminar el post
+            Storage::delete($post->image_path);
+        }   
+
+        //borra el post
+        $post->delete();
+
+        //variable de sesion flash 'swal' de un solo uso, que servirá para mostrar la alerta sweetalert2,
+        //con icono, titulo y texto, cuando se recrgue la vista index de posts
+        session()->flash('swal',[
+            'icon' => 'success',
+            'title' => '¡Post ELIMINADO!',
+            'text' => 'Post ' . $post->title . ' eliminado correctamente',
+        ]);
+
+        //redirigir a la ruta index de posts
+        return redirect()->route('admin.posts.index');
+             
+       
     }
 }
