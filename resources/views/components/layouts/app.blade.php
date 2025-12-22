@@ -31,7 +31,7 @@
 
             <!-- Home -->
             <flux:navbar class="-mb-px max-lg:hidden">
-                <!-- :current= / para activar e icono si estamos en su ruta -->
+                <!-- :current, activa el icono si estamos en su ruta -->
                 <flux:navbar.item icon="home" :href="route('home')" :current="request()->routeIs('home')" wire:navigate>
                     {{ __('Home') }}
                 </flux:navbar.item>

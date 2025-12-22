@@ -31,8 +31,8 @@
             {{-- previsualizar la imagen asociada al post --}}
             <div class="relative mb-4 mr-20 ml-20">
                 <img id="imgPreview" class="w-full aspect-video object-contain object-center" 
-                    {{-- si existe la imagen, obtiene su url y la muestra, si no, muestra la imagen por defecto --}}
-                    src="{{ $post->image_path ? Storage::url($post->image_path) : '/storage/no-image.jpg'}}" alt="no-image"
+                    {{-- obtiene el path de la imagen del post, gracias al accessor image en el modelo Post --}}
+                    src="{{ $post->image }}" alt="no-image"
                 >
    
                 {{-- botón cambiar imagen en la previsualización --}}

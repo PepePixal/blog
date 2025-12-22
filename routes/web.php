@@ -5,10 +5,9 @@ use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
+use App\Http\Controllers\HomeController;    
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // ruta temporal para probar la descarga de la imagen
 Route::get('/prueba/{post}', function (Post $post) {

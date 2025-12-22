@@ -6,6 +6,8 @@ use App\Observers\PostObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Storage;
 
 
 #[ObservedBy(PostObserver::class)]
@@ -34,6 +36,16 @@ class Post extends Model
         'is_published' => 'boolean',
         'published_at' => 'datetime',
     ];
+
+    // Accesores - genera un atributo donde obtiene el path de la imagen, cuando se obtiene el post
+    protected function image(): Attribute
+    {
+        return Attribute::make(
+            // si existe el path de la imagen ? obtiene su url y la muestra, si no :, muestra la imagen por defecto.
+            // el $this es porque estamos dentro del própio objeto del modelo Post
+            get: fn() => $this->image_path ? Storage::url($this->image_path) : '/storage/no-image.jpg',
+        );
+    }
 
     //relacion inversa muchos a uno con category
     public function category()
