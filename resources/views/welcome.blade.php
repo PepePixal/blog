@@ -13,7 +13,7 @@
 
                     <div class="px-4 py-4">
                         <h1 class="font-semibold text-xl mb-2">
-                            <a href="">
+                            <a href="{{ route('posts.show', $post) }}">
                                 {{ $post->title }}
                             </a>
                         </h1>

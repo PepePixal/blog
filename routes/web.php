@@ -6,8 +6,13 @@ use Livewire\Volt\Volt;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Post;
 use App\Http\Controllers\HomeController;    
+use App\Http\Controllers\PostController;
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])
+    ->name('home');
+
+Route::get('/posts/{post}', [PostController::class, 'show'])
+    ->name('posts.show');
 
 // ruta temporal para probar la descarga de la imagen
 Route::get('/prueba/{post}', function (Post $post) {

@@ -47,6 +47,12 @@ class Post extends Model
         );
     }
 
+    //Route Model Binding. Para que en la url de la ruta utilice el slug en lugar del id
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     //relacion inversa muchos a uno con category
     public function category()
     {
