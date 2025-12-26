@@ -56,7 +56,7 @@ class PostController extends Controller
             $relatedPosts = $relatedPosts->concat($relatedPosts2);
         }
 
-
+        // enviar a la vista posts.show, el post actual y los posts relacionados obtenidos
         return view('posts.show', compact('post', 'relatedPosts')); 
     }
 }

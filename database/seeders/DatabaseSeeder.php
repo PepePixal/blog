@@ -32,5 +32,10 @@ class DatabaseSeeder extends Seeder
 
         //crear 100 posts aleatorios falsos de prueba
         Post::factory(100)->create();
+
+        // llamar al seeder PermissionSeeder
+        $this->call([
+            PermissionSeeder::class
+        ]);
     }
 }
