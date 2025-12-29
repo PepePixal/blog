@@ -109,7 +109,7 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        // eliminar el registro de la categoría
+        // eliminar el registro de la tabla permissions
         $permission->delete();
 
         //variable de sesion flash 'swal' de un solo uso, que servirá para mostrar la alerta sweetalert2,

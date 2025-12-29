@@ -8,6 +8,7 @@ use App\Models\Post;
 //use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -33,9 +34,11 @@ class DatabaseSeeder extends Seeder
         //crear 100 posts aleatorios falsos de prueba
         Post::factory(100)->create();
 
-        // llamar al seeder PermissionSeeder
+        // llamar a los seeders PermissionSeeder y RoleSeeder
         $this->call([
-            PermissionSeeder::class
+            PermissionSeeder::class,
+            RoleSeeder::class
         ]);
+
     }
 }

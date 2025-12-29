@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PermissionController;
-
+use App\Http\Controllers\Admin\RoleController;
 
 Route::get('/', function (){
     //retorna vista dashboard
@@ -19,3 +19,6 @@ Route::resource('posts', PostController::class);
 
 // Crea las 7 rutas necesarias para CRUD de permisos, asignadas al controlador PermissionController
 Route::resource('permissions', PermissionController::class);
+
+// Crea las 7 rutas necesarias para CRUD de roles, asignadas al controlador RoleController
+Route::resource('roles', RoleController::class);    

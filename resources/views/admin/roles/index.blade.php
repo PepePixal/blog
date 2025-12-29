@@ -1,18 +1,19 @@
 <x-layouts.admin>
-        <div class="flex justify-between items-center mb-4">
+    
+    <div class="flex justify-between items-center mb-4">
         <!-- Breadcrumb o mígas de pan -->
         <flux:breadcrumbs>
             <flux:breadcrumbs.item href="{{ route('admin.dashboard') }}">Dashboard</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item href="{{ route('admin.permissions.index') }}">Permisos</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="{{ route('admin.roles.index') }}">Roles</flux:breadcrumbs.item>
         </flux:breadcrumbs>
 
-        <!-- Botón para crear un nuevo permiso -->
-        <a href="{{ route('admin.permissions.create') }}" class="btn btn-blue text-sm">
-            Nuevo Permiso
+        <!-- Botón para crear una nueva categoría -->
+        <a href="{{ route('admin.roles.create') }}" class="btn btn-blue text-sm">
+            Nuevo Rol
         </a>
     </div>
 
-    <!-- listado de Permisos -->
+    <!-- listado de Roles -->
     <!-- Tabla html con Tailwind CSS de: https://flowbite.com/docs/components/tables/ -->
     <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base ">
         <table class="w-full text-sm text-left rtl:text-right text-body">
@@ -32,22 +33,23 @@
                     </th>
                 </tr>
             </thead>
+
             <tbody>
-                @foreach ($permissions as $permission)
+                @foreach ($roles as $role)
                     <tr class="bg-neutral-primary border-b border-default">
                         <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap">
-                            {{ $permission->id }}
+                            {{ $role->id }}
                         </th>
                         <td class="px-6 py-4">
-                            {{ $permission->name }}
+                            {{ $role->name }}
                         </td>
                         <td class="px-6 py-4">
-                            <a href="{{ route('admin.permissions.edit', $permission) }}" class="btn btn-green">
+                            <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-green">
                                 Editar
                             </a>
                         </td>
                         <td class="px-6 py-4">
-                            <form class="delete-form" action="{{ route('admin.permissions.destroy', $permission) }}"
+                            <form class="delete-form" action="{{ route('admin.roles.destroy', $role) }}"
                                 method="POST">
                                 @csrf
 
@@ -104,4 +106,5 @@
         </script>
     @endpush
 
+    
 </x-layouts.admin>

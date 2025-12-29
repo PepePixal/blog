@@ -51,6 +51,9 @@
                     <flux:navlist.item icon="key" :href="route('admin.permissions.index')" :current="request()->routeIs('admin.permissions.*')" wire:navigate>
                         Permisos
                     </flux:navlist.item>
+                    <flux:navlist.item icon="lock-open" :href="route('admin.roles.index')" :current="request()->routeIs('admin.roles.*')" wire:navigate>
+                        Roles
+                    </flux:navlist.item>    
                 </flux:navlist.group>
             </flux:navlist>
 
