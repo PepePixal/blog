@@ -26,6 +26,7 @@
             @csrf
 
             {{-- Indica que el formulario es un PUT, requerido por el método update del controlador --}}
+            <!-- genera un campo oculto (input) con el método HTTP PUT -->
             @method('PUT')
 
             {{-- previsualizar la imagen asociada al post --}}
