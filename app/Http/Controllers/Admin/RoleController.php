@@ -89,7 +89,34 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        // validar los campos recibidos en $request
+        $request->validate([
+            //valida que el campo name sea requerido y que sea único, excepto si es el mismo del rol actual
+            'name' => 'required|unique:roles,name, ' . $role->id,
+            'permissions' => 'required|array',
+            //valida que todos los elementos (id) del array permissions, existan en el campo id de la tabla permissions
+            'permissions.*' => 'exists:permissions,id',
+        ]);
+
+        // actualizar el rol con el campo name
+        $role->update([
+            'name' => $request->name,
+        ]);
+
+        //sincronizar los permisos recibidos, con los permisos del rol actual,
+        //elimina los que sobra, agrega los nuevos y mantiene los que ya existen
+        $role->permissions()->sync($request->permissions);
+
+        //agregar una variable de sesión, con una alerta tipo swal
+        session()->flash('swal', [
+            'icon' => 'success', 
+            'title' => 'Rol actualizado exitosamente',
+            'text' => $role->name
+        ]);
+
+        //redirigir a la ruta edit, enviando el rol actualizado
+        return redirect()->route('admin.roles.edit', $role);
+
     }           
 
     /**
@@ -97,6 +124,17 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        // eliminar el registro del rol
+        $role->delete();
+
+        //agregar una variable de sesión, con una alerta tipo swal
+        session()->flash('swal', [
+            'icon' => 'success', 
+            'title' => 'Rol eliminado',
+            'text' => $role->name
+        ]);
+
+        //redirigir a la ruta index
+        return redirect()->route('admin.roles.index');
     }
 }
