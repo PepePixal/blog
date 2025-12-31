@@ -27,6 +27,27 @@
         
         <flux:input label="Confirmar Contraseña" name="password_confirmation" type="password"/>
 
+        <!-- lista de roles, obteniendo los roles chequeados del usuario, si los tiene-->
+        <div>
+            <p class="text-sm font-medium mb-2">Roles</p>
+            <ul>
+                @foreach ($roles as $role)
+                    <li class="mb-1">
+                        {{-- las opciones chequeadas se almacenan en el array roles[] --}}
+                        <flux:checkbox 
+                            name="roles[]" 
+                            value="{{ $role->id }}" 
+                            label="{{ $role->name }}"
+                            {{-- :checked obtiene true o false, según la condición:
+                            si el id de $role->id existe en el antiguo array 'roles' o 
+                            en el array generado a partir de la lista de ids de roles del usuario, creada con el método pluck() --}}
+                            :checked="in_array($role->id, old('roles', $user->roles->pluck('id')->toArray()))"
+                        />
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+
         <div class="flex justify-end">
             <flux:button type="submit" variant="primary">Actualizar</flux:button>
         </div>

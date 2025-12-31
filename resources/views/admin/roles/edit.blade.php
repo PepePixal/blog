@@ -19,6 +19,7 @@
         <!-- con el value="{{ old('name') }}" se mantiene el valor del campo si hay un error en la validación -->
         <flux:input label="Nombre" name="name" type="text" value="{{ old('name', $role->name) }}"/>
 
+        <!-- lista de permisos -->
         <div>
             <p class="text-sm font-medium mb-2">Permisos</p>
             <ul>
@@ -31,7 +32,7 @@
                             label="{{ $permission->name }}"
                             {{-- :checked obtiene true o false, según la condición:
                             si el id de $permission->id existe en el antiguo array 'permissions' o 
-                            en el array generado a partir de la lista de ids de permisos, creada con el método pluck() --}}
+                            en el array generado a partir de la lista de ids de permisos del role, creada con el método pluck() --}}
                             :checked="in_array($permission->id, old('permissions', $role->permissions->pluck('id')->toArray()))"
                         />
                     </li>

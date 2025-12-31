@@ -15,6 +15,7 @@
         <!-- con el value="{{ old('name') }}" se mantiene el valor del campo si hay un error en la validación -->
         <flux:input label="Nombre" name="name" type="text" value="{{ old('name') }}"/>
 
+        {{-- listado de permisos con checkbox --}}
         <div>
             <p class="text-sm font-medium mb-2">Permisos</p>
             <ul>

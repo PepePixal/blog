@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -25,7 +26,11 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        //obtener todos los roles
+        $roles = Role::all();
+
+        //retornar la vista create, enviando los roles
+        return view('admin.users.create', compact('roles'));
     }
 
     /**
@@ -40,6 +45,9 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             //confirmed confirma que el campo password sea igual al campo password_confirmation
             'password' => 'required|string|min:8|confirmed',
+            'roles' => 'nullable|array',
+            //todos los elementos del array roles, deben existir en algún campo id de la tabla roles.
+            'roles.*' => 'exists:roles,id'
         ]);
 
         //encripta la contraseña
@@ -47,6 +55,13 @@ class UserController extends Controller
 
         //crea un nuevo registro de usuario en la tabla users
         $user = User::create($data);
+
+        // validar si existe algo en el array roles y si es así, asigna los roles al usuario
+        if(isset($data['roles'])){
+            //asignar los roles al usuario a traves de la relación roles() creada por el paquete Spatie Laravel Permission,
+            //insertando los registros en la tabla pivote model_has_roles (crada por el paquete)
+            $user->roles()->attach($data['roles']);
+        }
 
         //variable de sesión con clave 'swal' para mostrar alerta de éxito
         session()->flash('swal',
@@ -73,8 +88,11 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        //obtener todos los roles
+        $roles = Role::all();
 
-        return view('admin.users.edit', compact('user'));
+        // llamar a la vista, enviando user y roles
+        return view('admin.users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -90,25 +108,28 @@ class UserController extends Controller
             //en la edición, el campo password es opcional, por si no se desea cambiar la contraseña
             //confirmed confirma que el campo password sea igual al campo password_confirmation
             'password' => 'nullable|string|min:8|confirmed',
+            'roles' => 'nullable|array',
+            //todos los elementos del array roles, deben existir en algún campo id de la tabla roles.
+            'roles.*' => 'exists:roles,id'            
         ]);
 
-       
         //actualiza el nombre y el email del usuario, con los datos validados
         $user->name = $data['name'];
         $user->email = $data['email'];
 
-
-        
         //si se envió una nueva contraseña con el formulario, encriptarla y
         if (isset($data['password'])) {
-
             //encripta la contraseña recibida y la reasigna al usuario
             $user->password = bcrypt($data['password']);
-
         }
        
-        //guardar el usuario con los datos validados y encriptados
+        //guardar el usuario con los datos validados y encriptados, en la tabla users
         $user->save();
+
+        //sincronizar los roles del usuario, a través de la relación roles() del modelo user.
+        //Obtiene los roles del array del input 'roles' o de un array vacío,
+        //para sincronizarlos en la tabla pivote models_as_roles (creada por el paquete )
+        $user->roles()->sync($request->input('roles', []));
 
         //variable de sesión con clave 'swal' para mostrar alerta de éxito
         session()->flash('swal',
