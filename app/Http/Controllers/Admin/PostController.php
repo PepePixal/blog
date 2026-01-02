@@ -7,19 +7,35 @@ use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Jobs\ResizeImage;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Gate;
 
 
-class PostController extends Controller
+class PostController extends Controller implements HasMiddleware
 {
+    // proteger las rutas posts con el permiso manage posts
+    static function middleware(): array
+    {
+        return [
+            new Middleware('can:manage posts'),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        // obtener todos los posts, ordenados por id (descendente) y paginarlos
-        $posts = Post::latest("id")->paginate(10);
+        // obtener todos los posts, ordenados por id (descendente),
+        // cuyo campo user_id sea igual al id del usuario autenticado y
+        // paginarlos de a 10
+        $posts = Post::latest("id")
+            ->where('user_id', Auth::id())
+            ->paginate(10);
 
         // retornar la vista admin.posts.index con los posts
         return view('admin.posts.index', compact('posts')); 
@@ -81,6 +97,11 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+
+        //Verificación de Autorización para editar un post: 
+        //Llama a la regla llamada 'author' definida en el AppServiceProvider.php
+        Gate::authorize('author', $post);
+        
         //obtener todas las categorías para el select del formulario editar post
         $categories = Category::all();
         //obtener todas las etiquetas para el select2 del formulario editar post

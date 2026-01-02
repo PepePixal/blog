@@ -6,10 +6,20 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
 
-class RoleController extends Controller
+class RoleController extends Controller implements HasMiddleware
 {
+    // proteger las rutas roles con el permiso manage roles
+    static function middleware(): array
+    {
+        return [
+            new Middleware('can:manage roles'),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -51,7 +61,9 @@ class RoleController extends Controller
            'name' => $request->name,
         ]);
 
-        //asignar los permisos recibidos, al nuevo rol
+        //asignar los permisos recibidos, al nuevo rol,
+        //a traves de la relación permissions() del modelo Role, creada por el paquete Spatie Laravel Permission,
+        //se insertaran los registros en la tabla pivote model_has_permissions (crada por el paquete)
         $role->permissions()->attach($request->permissions);
 
         //agregar una variable de sesión, con una alerta tipo swal
@@ -104,6 +116,8 @@ class RoleController extends Controller
         ]);
 
         //sincronizar los permisos recibidos, con los permisos del rol actual,
+        //a traves de la relación permissions() del modelo Role, creada por el paquete Spatie Laravel Permission,
+        //para sincronizarlos en la tabla pivote model_has_permissions (creada por el paquete )
         //elimina los que sobra, agrega los nuevos y mantiene los que ya existen
         $role->permissions()->sync($request->permissions);
 

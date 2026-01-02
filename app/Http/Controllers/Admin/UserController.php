@@ -6,9 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class UserController extends Controller
+
+class UserController extends Controller implements HasMiddleware
 {
+    // proteger las rutas users con el permiso manage users
+    static function middleware(): array
+    {
+        return [
+            new Middleware('can:manage users'),
+        ];
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -117,7 +128,7 @@ class UserController extends Controller
         $user->name = $data['name'];
         $user->email = $data['email'];
 
-        //si se envió una nueva contraseña con el formulario, encriptarla y
+        //si se recibió una nueva contraseña desde el formulario, encriptarla y
         if (isset($data['password'])) {
             //encripta la contraseña recibida y la reasigna al usuario
             $user->password = bcrypt($data['password']);
@@ -129,6 +140,7 @@ class UserController extends Controller
         //sincronizar los roles del usuario, a través de la relación roles() del modelo user.
         //Obtiene los roles del array del input 'roles' o de un array vacío,
         //para sincronizarlos en la tabla pivote models_as_roles (creada por el paquete )
+        //elimina los que sobra, agrega los nuevos y mantiene los que ya existen
         $user->roles()->sync($request->input('roles', []));
 
         //variable de sesión con clave 'swal' para mostrar alerta de éxito

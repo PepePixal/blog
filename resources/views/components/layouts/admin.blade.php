@@ -40,30 +40,50 @@
 
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Administrador')" class="grid">
-                <flux:navlist.item icon="squares-2x2" :href="route('admin.dashboard')"
-                    :current="request()->routeIs('admin.dashboard')" wire:navigate>
-                    {{ __('Dashboard') }}
-                </flux:navlist.item>
-                <flux:navlist.item icon="list-bullet" :href="route('admin.categories.index')"
-                    :current="request()->routeIs('admin.categories.*')" wire:navigate>
-                    {{ __('Categories') }}
-                </flux:navlist.item>
-                <flux:navlist.item icon="book-open" :href="route('admin.posts.index')"
-                    :current="request()->routeIs('admin.posts.*')" wire:navigate>
-                    {{ __('Posts') }}
-                </flux:navlist.item>
-                <flux:navlist.item icon="key" :href="route('admin.permissions.index')"
-                    :current="request()->routeIs('admin.permissions.*')" wire:navigate>
-                    Permisos
-                </flux:navlist.item>
-                <flux:navlist.item icon="lock-open" :href="route('admin.roles.index')"
-                    :current="request()->routeIs('admin.roles.*')" wire:navigate>
-                    Roles
-                </flux:navlist.item>
-                <flux:navlist.item icon="user-group" :href="route('admin.users.index')"
-                    :current="request()->routeIs('admin.users.*')" wire:navigate>
-                    Usuarios
-                </flux:navlist.item>
+                
+                {{-- @can restringe el enlace 'Dashboard' solo a los usuarios que tengan el permiso access dashboard --}}
+                @can('access dashboard')
+                    <flux:navlist.item icon="squares-2x2" :href="route('admin.dashboard')"
+                        :current="request()->routeIs('admin.dashboard')" wire:navigate>
+                        {{ __('Dashboard') }}
+                    </flux:navlist.item>
+                @endcan
+                
+                @can('manage categories')
+                    <flux:navlist.item icon="list-bullet" :href="route('admin.categories.index')"
+                        :current="request()->routeIs('admin.categories.*')" wire:navigate>
+                        {{ __('Categories') }}
+                    </flux:navlist.item>
+                @endcan
+
+                @can('manage posts')
+                    <flux:navlist.item icon="book-open" :href="route('admin.posts.index')"
+                        :current="request()->routeIs('admin.posts.*')" wire:navigate>
+                        {{ __('Posts') }}
+                    </flux:navlist.item>
+                @endcan
+
+                @can('manage permissions')
+                    <flux:navlist.item icon="key" :href="route('admin.permissions.index')"
+                        :current="request()->routeIs('admin.permissions.*')" wire:navigate>
+                        Permisos
+                    </flux:navlist.item>
+                @endcan
+
+                @can('manage roles')
+                    <flux:navlist.item icon="lock-open" :href="route('admin.roles.index')"
+                        :current="request()->routeIs('admin.roles.*')" wire:navigate>
+                        Roles
+                    </flux:navlist.item>
+                @endcan
+
+                @can('manage users')
+                    <flux:navlist.item icon="user-group" :href="route('admin.users.index')"
+                        :current="request()->routeIs('admin.users.*')" wire:navigate>
+                        Usuarios
+                    </flux:navlist.item>
+                @endcan
+
             </flux:navlist.group>
         </flux:navlist>
 

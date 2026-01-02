@@ -1,5 +1,7 @@
 <flux:header container class="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    {{-- menu amburguesa --}}
     <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+
     <!-- Logo -->
     <a href="{{ route('home') }}" class="ms-2 me-5 flex items-center space-x-2 rtl:space-x-reverse lg:ms-0" wire:navigate>
         <x-app-logo />
@@ -54,7 +56,10 @@
                 <flux:menu.separator />
 
                 <flux:menu.radio.group>
-                    <flux:menu.item :href="route('admin.dashboard')" icon="key" wire:navigate>{{ __('Admin') }}</flux:menu.item>
+                    {{-- mostrar el item enlace Admin, solo si el usuario tiene permiso access dashboard --}}
+                    @can('access dashboard')
+                        <flux:menu.item :href="route('admin.dashboard')" icon="key" wire:navigate>{{ __('Admin') }}</flux:menu.item>
+                    @endcan
                     <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
                 </flux:menu.radio.group>
 
@@ -68,6 +73,7 @@
                 </form>
             </flux:menu>
         </flux:dropdown>
+
     {{-- mostrar este dropdown solo cuando el usuario NO esté autenticado --}}
     @else
         <flux:dropdown position="top" align="end">

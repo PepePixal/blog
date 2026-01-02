@@ -6,9 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // El modelo Permission viene con el paquete Spatie de Laravel Permission
 use Spatie\Permission\Models\Permission;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class PermissionController extends Controller
+class PermissionController extends Controller implements HasMiddleware
 {
+    // proteger las rutas permissions con el permiso manage permissions
+    static function middleware(): array
+    {
+        return ['can:manage permissions'];
+    }
+    
     /**
      * Display a listing of the resource.
      */

@@ -10,7 +10,10 @@ use App\Http\Controllers\Admin\UserController;
 Route::get('/', function (){
     //retorna vista dashboard
     return view('admin.dashboard');
-})->name('dashboard');
+    //protección de la ruta con el permiso "access dashboard"
+})->middleware('can:access dashboard')
+// nombre de la ruta    
+->name('dashboard');
 
 // Crea las 7 rutas necesarias para CRUD de categorias, asignadas al controlador CategoryController
 Route::resource('categories', CategoryController::class);
